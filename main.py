@@ -1,26 +1,34 @@
 class tocaOSom:
 
     def __init__(self):
+        self.a = True
+        self.resultado = []
+        self.tocando = []
         self.lista_Musicas = []
         self.lista_Comandos = []
 
     def play(self):
         if len(self.lista_Musicas) >= 1:
+            # while True:
+            #     for x in range(len(self.lista_Musicas)):
+                # while not self.end:
             self.tocando = self.lista_Musicas[0]
         return self.tocando
 
     def next(self, musica):
         if musica in self.lista_Musicas and musica != self.tocando:
-            for i in range(len(self.lista_Musicas)):
-                self.tocando = self.lista_Musicas[i]
-                self.proximaTocar = self.lista_Musicas[i + 1]
-        return self.proximaTocar
+            i = self.lista_Musicas.index(musica)
+            self.lista_Musicas.pop(i)
+            self.lista_Musicas.insert(1, musica)
 
     def adicionar_musica(self, musica):
         return self.lista_Musicas.append(musica)
 
     def deletar_musica(self, musica):
-        return self.lista_Musicas.remove(musica)
+        try:
+            return self.lista_Musicas.remove(musica)
+        except:
+            pass
         # pass
 
     def adicionar_comando(self, comando):
@@ -38,62 +46,48 @@ class tocaOSom:
         # return
 
     def current(self):
-        return self.lista_Musicas[0]
+        if not self.tocando:
+            print("Toque! Toque, Dijê!")
+        else:
+            print(self.tocando)
 
-    def main(self):
-        inp = input('Adicionar').split()
-        # print(len(inp))
-        if len(inp) > 1:
-            # print("Entrei 1")
-            comando, musica = inp
+    def checagemComando(self, comando, musica):
+        if comando == 'add':
             self.adicionar_comando(comando)
             self.adicionar_musica(musica)
-        elif len(inp) == 1:
-            # print("Entrei 2")
-            comando = inp
-            # print(comando)
-            if comando[0] == 'fight':
-                print('Jedi Wagner, assuma o comando!')
-                exit()
-            elif comando[0] == 'list':
-                self.listar()
-            else:
-                self.adicionar_comando(comando)
-        # print(f'Antes{inp}')
-        while inp[0] != 'fight':
-            # print(f'Dps{inp[0]}')
-            # print(inp)
-            inp = input('tester').split()
-            # print(inp)
+
+        if comando == 'del':
+            # comando, musica = inp
+            self.adicionar_comando(comando)
+            self.deletar_musica(musica)
+
+        if comando == 'next':
+            self.adicionar_comando(comando)
+            self.next(musica)
+
+    def main(self):
+        while self.a:
+            inp = str(input('')).split()
 
             if len(inp) > 1:
                 comando, musica = inp
-                # print(comando)
-                if comando == 'add':
-                    self.adicionar_comando(comando)
-                    self.adicionar_musica(musica)
-
-                if comando == 'del':
-                    # comando, musica = inp
-                    self.adicionar_comando(comando)
-                    self.deletar_musica(musica)
-
-                if comando == 'next':
-                    self.adicionar_comando(comando)
-                    self.next(musica)
+                self.checagemComando(comando, musica)
 
             elif len(inp) == 1:
                 comando = inp
                 self.adicionar_comando(comando)
-                if inp[0] == 'list':
+                if comando[0] == 'list':
                     self.listar()
-        if inp[0] == 'fight':
-            print('Jedi Wagner, assuma o comando!')
-            exit()
+                if comando[0] == 'play':
+                    self.play()
+                if comando[0] == 'fight':
+                    self.a = False
+                if comando[0] == 'current':
+                    self.current()
 
-        # listar()
-        # print(self.lista_Musicas)
-        # print(self.lista_Comandos)
+        # for _ in self.lista_Comandos:
+        #     print(_)
+        print('Jedi Wagner, assuma o comando!')
 
 
 ini = tocaOSom()
